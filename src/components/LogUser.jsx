@@ -19,7 +19,7 @@ const LogUser = () => {
             document.cookie = `jwt=${response.data.jwt}`;
             // setSelectedClient(response.data.data);
             console.log(document.cookie);
-            history.push("userPanel");
+            history.push("/userPanel");
         } catch (e) {
             console.log(e);
             if (e.response !== undefined) {
@@ -60,7 +60,7 @@ const LogUser = () => {
                 <h4 style={{ marginBottom : "20px"}}>Istniejący użytkownik</h4>
                 <form action="" onSubmit={handleSubmit} >
                 <div className="form-group">
-                    <label htmlFor="nickname">username</label>
+                    <label htmlFor="nickname">Nazwa użytkownika</label>
                     <input value={username} onChange={e => setUsername(e.target.value)} size="50" id="username" className="form-control" required/>
                 </div>
                 <div className="form-group">
