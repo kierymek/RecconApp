@@ -9,82 +9,88 @@ const UserPanel = (props) => {
 
   const [loggedUser, setLoggedUser] = useState("");
 
-//   const { idClient } = useParams();
-//   const { selectedClient, setSelectedClient } = useContext(ReconsContext);
-//   const { selectedReservations, setSelectedReservations } = useContext(
-//     ReconsContext
-//   );
+  //   const { idClient } = useParams();
+  //   const { selectedClient, setSelectedClient } = useContext(ReconsContext);
+  //   const { selectedReservations, setSelectedReservations } = useContext(
+  //     ReconsContext
+  //   );
 
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) === ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-            return c.substring(name.length, c.length);
-        }
-        }
-        return "";
+  function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) === " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) === 0) {
+        return c.substring(name.length, c.length);
+      }
     }
+    return "";
+  }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // const authHeader = initAuthHeaders();
-                console.log("userpanel getcookie (jwt): ", getCookie("jwt"));
-                const response = await ReconsFinder.get("/logged", {
-                    headers : {
-                        "jwt" : getCookie("jwt"),
-                    },
-                    COOKIES : {
-                        jwt : getCookie("jwt")
-                    }
-                });
-                console.log(response.data);
-                setLoggedUser(response.data);
-            } catch (e) {
-                console.log(e);
-                if (e.response !== undefined) {
-                    console.log(e.response);
-                    const responseText = JSON.parse(e.response.request.responseText);
-                    let response = "";
-                    for (const [key, value] of Object.entries(responseText)) {
-                        response += "input name -> " + key + "\ninput errors:  ";
-                        if (typeof value === "string") {
-                            response += value + "\n";
-                            continue;
-                        }
-                        for (const message of Object.values(value)) {
-                            response += message + "\n";
-                        }
-                        response += "\n";
-                    }
-                    alert(response);
-                }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ReconsFinder.get("/logged", {
+          headers: {
+            jwt: getCookie("jwt"),
+          },
+        });
+        console.log(response.data);
+        setLoggedUser(response.data);
+      } catch (e) {
+        console.log(e);
+        if (e.response !== undefined) {
+          console.log(e.response);
+          const responseText = JSON.parse(e.response.request.responseText);
+          let response = "";
+          for (const [key, value] of Object.entries(responseText)) {
+            response += "input name -> " + key + "\ninput errors:  ";
+            if (typeof value === "string") {
+              response += value + "\n";
+              continue;
             }
+            for (const message of Object.values(value)) {
+              response += message + "\n";
+            }
+            response += "\n";
+          }
+          alert(response);
         }
-        fetchData();
-    }, [])
-//   const handleDelete = async (e, id) => {
-//     try {
-//       const response = await ReconsFinder.delete(`/reservations/${id}`);
-//       setSelectedReservations(
-//         selectedReservations.filter((reservation) => {
-//           return reservation.id_rezerwacja !== id;
-//         })
-//       );
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
+      }
+    };
+    fetchData();
+  }, []);
+  //   const handleDelete = async (e, id) => {
+  //     try {
+  //       const response = await ReconsFinder.delete(`/reservations/${id}`);
+  //       setSelectedReservations(
+  //         selectedReservations.filter((reservation) => {
+  //           return reservation.id_rezerwacja !== id;
+  //         })
+  //       );
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+
+  const handleEdit = async (e) => {
+        try {
+          history.push("/userDataEditPanel");
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+  
 
   return (
     <div>
-      {<>
+      {
+        <>
           <h1
             className="text-center display-2"
             style={{ paddingBottom: "30px" }}
@@ -114,6 +120,9 @@ const UserPanel = (props) => {
                   </tr>
                 </thead>
               </table>
+              <button onClick={(e) => handleEdit(e)} className="btn btn-primary">
+                Edytuj dane
+              </button>
             </div>
             <div className="col-8">
               <h3>Rachunki</h3>
