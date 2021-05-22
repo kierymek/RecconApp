@@ -4,7 +4,8 @@ import Home from "./routes/Home";
 import { ReconsContextProvider } from './context/ReconsContext';
 import UserPanel from './routes/UserPanel';
 import RegisterPage from './routes/RegisterPage';
-import UserDataEditPanel from './routes/UserDataEditPanel';
+import EditUser from './routes/EditUser';
+import ClusterPanel from './routes/ClusterPanel';
 
 const App = () => {
     return (
@@ -15,8 +16,8 @@ const App = () => {
                         <Route exact path="/" component={Home}/>
                         <Route exact path="/userPanel" component={UserPanel}/>
                         <Route exact path="/register" component={RegisterPage}/>
-                        <Route exact path="/userDataEditPanel" component={UserDataEditPanel}/>
-
+                        <Route exact path="/EditUser" component={EditUser}/>
+                        <Route exact path="/ClusterPanel" component={ClusterPanel}/>
                     </Switch>
                 </Router>
             </div>
