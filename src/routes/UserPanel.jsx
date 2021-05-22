@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import { ReconsContext } from "../context/ReconsContext";
-
+import Cluster from "../components/Cluster";
+import FindUser from "../components/FindUser";
+import Navbar from "../components/Navbar";
 const UserPanel = (props) => {
   const history = useHistory();
   const location = useLocation();
-
   const [loggedUser, setLoggedUser] = useState("");
 
   //   const { idClient } = useParams();
@@ -34,7 +35,7 @@ const UserPanel = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await ReconsFinder.get("/logged", {
+        const response = await ReconsFinder.get("/auth/logged", {
           headers: {
             jwt: getCookie("jwt"),
           },
@@ -78,17 +79,16 @@ const UserPanel = (props) => {
   //   };
 
   const handleEdit = async (e) => {
-        try {
-          history.push("/userDataEditPanel");
-        } catch (err) {
-          console.log(err);
-        }
-      };
-
-  
+    try {
+      history.push("/userDataEditPanel");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <div>
+      <Navbar />
       {
         <>
           <h1
@@ -104,11 +104,11 @@ const UserPanel = (props) => {
                 <thead>
                   <tr>
                     <th scope="col">Imię</th>
-                    <td>{loggedUser.first_name}</td>
+                    <td>{loggedUser.firstname}</td>
                   </tr>
                   <tr>
                     <th scope="col">Nazwisko</th>
-                    <td>{loggedUser.last_name}</td>
+                    <td>{loggedUser.lastname}</td>
                   </tr>
                   <tr>
                     <th scope="col">Username</th>
@@ -120,7 +120,10 @@ const UserPanel = (props) => {
                   </tr>
                 </thead>
               </table>
-              <button onClick={(e) => handleEdit(e)} className="btn btn-primary">
+              <button
+                onClick={(e) => handleEdit(e)}
+                className="btn btn-primary"
+              >
                 Edytuj dane
               </button>
             </div>
@@ -137,28 +140,24 @@ const UserPanel = (props) => {
                     <th scope="col">Zmień status</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {/* {selectedReservations && selectedReservations.map((reservation) => {
-                                    return (
-                                        
-                                        <tr key={reservation.id_rezerwacja}>
-                                            <td>{reservation.id_rezerwacja}</td>
-                                            <td>{reservation.nazwa}</td>
-                                            <td>{reservation.rodzaj}</td>
-                                            <td>{reservation.zameldowanie}</td>
-                                            <td>{reservation.wymeldowanie}</td>
-                                            <td><button onClick={(e) => handleDelete(e, reservation.id_rezerwacja)} className="btn btn-secondary">Anuluj</button></td>
-                                        </tr>
-                                        
-                                        
-                                    )
-                                })} */}
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
           </div>
         </>
       }
+      <div>
+        <FindUser />
+      </div>
+      <div>
+        <Cluster
+          clusters={[
+            { groupid: 1, name: "Aa", startdate: "111Taaa" },
+            { groupid: 2, name: "Aa", startdate: "111Taaa" },
+            { groupid: 3, name: "Aa", startdate: "111Taaa" },
+          ]}
+        />
+      </div>
     </div>
   );
 };

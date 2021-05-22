@@ -11,7 +11,7 @@ const LogUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await ReconsFinder.post("login", {
+      const response = await ReconsFinder.post("/auth/login", {
         password,
         email,
       });
