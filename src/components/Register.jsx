@@ -17,8 +17,8 @@ const Register = () => {
     e.preventDefault();
     try {
       const response = await ReconsFinder.post("register", {
-        first_name: name,
-        last_name: surname,
+        firstname: name,
+        lastname: surname,
         username: nickname,
         password,
         email,
