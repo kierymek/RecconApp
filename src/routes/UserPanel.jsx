@@ -3,11 +3,13 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import { ReconsContext } from "../context/ReconsContext";
 import { getCookie, printAlert } from "../context/Functions";
+import Cluster from "../components/Cluster";
+import FindUser from "../components/FindUser";
+import Navbar from "../components/Navbar";
 
 const UserPanel = (props) => {
   const history = useHistory();
   const location = useLocation();
-
   const [loggedUser, setLoggedUser] = useState("");
   const [reckonings, setReckonings] = useState("");
 
@@ -67,6 +69,7 @@ const UserPanel = (props) => {
   let outcome = 0;
   return (
     <div>
+      <Navbar />
       {
         <>
           <h1
@@ -168,6 +171,18 @@ const UserPanel = (props) => {
           </div>
         </>
       }
+      <div>
+        <FindUser />
+      </div>
+      <div>
+        <Cluster
+          clusters={[
+            { groupid: 1, name: "Aa", startdate: "111Taaa" },
+            { groupid: 2, name: "Aa", startdate: "111Taaa" },
+            { groupid: 3, name: "Aa", startdate: "111Taaa" },
+          ]}
+        />
+      </div>
     </div>
   );
 };

@@ -1,53 +1,39 @@
-import axios from 'axios'
-import React, { useContext, useState } from 'react'
-import FindUser from '../components/FindUser'
-import SingleUser from './SingleUser'
-const Cluster = () => {
-    const [users, setUsers] = useState("");
-    const [cost, setCost] = useState("");
-    //klaster musi znac swoje id
-    //const clusterId = this.props.clusterId;
-    const handleSubmit = async (e) => {
-        //nwm jak info z cookies wyciagnac
-        e.preventDefault();
-        console.log("a");
-    }
-    //nwm gdzie wywowalc te funckje na poczatku
-    const getData = async () => {
-
-        try {
-            const response = axios.get('jakis jebany endpint z ktorego dostane wybrany cluster /clusters/:custerId');
-            setUsers(response.data);
-        } catch (e) {
-            console.log(e);
-        }
-    }
-    return (
-        <div>
-            {/* Wypisanie znajomych i ich zobowiązań */}
-            <div>
-
-                <table className="table caption-top table-secondary">
-                    <tbody>
-                        {/* {users.map(user => { <SingleUser first_name={user.first_name} last_name={user.last_name} debt={user.debt}/> })} */}
-
-
-                    </tbody>
-                </table>
+import React from "react";
+import { useHistory } from "react-router-dom";
+const Cluster = ({ clusters }) => {
+  const history = useHistory();
+  function moveToDetails(groupid) {
+    console.log(groupid);
+    history.push(`/clusterDetails/${groupid}`);
+  }
+  return (
+    <div>
+      <h1>Moje grupy</h1>
+      <div className="row row-cols-3 mb-2">
+        {clusters.map((cluster) => {
+          return (
+            <div
+              key={cluster.groupid}
+              className="card text-white bg-secondary mb-3 mr-4"
+              style={{ maxWidth: "30%" }}
+              onClick={() => moveToDetails(cluster.groupid)}
+            >
+              <div className="card-header d-flex justify-content-between">
+                <span>Nazwa grupy: </span>
+                <span>{cluster.name}</span>
+              </div>
+              <div className="card-body d-flex justify-content-between">
+                <span>Data: </span>
+                <span className="card-text ">
+                  {cluster.startdate.split("T", 1)}
+                </span>
+              </div>
             </div>
-            {/* Dodanie swojego zobowiązania*/}
-            <form action="" onSubmit={handleSubmit} >
-                    <div className="form-group">
-                        <label htmlFor="cost">Twoje wpłaty</label>
-                        {<input value={cost} onChange={e => setCost(e.target.value)} size="50" id="cost" className="form-control" required />}
-                    </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
-                    <button type="submit" className="btn btn-primary">Dodaj swoje koszta</button>
-                </form>
-            {/* Dodanie znajomego */}
-            {/* <FindUser/> */}
-        </div>
-    )
-}
-
-export default Cluster
+export default Cluster;

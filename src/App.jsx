@@ -1,11 +1,12 @@
-import React from 'react';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from "./routes/Home";
 import { ReconsContextProvider } from './context/ReconsContext';
 import UserPanel from './routes/UserPanel';
 import RegisterPage from './routes/RegisterPage';
 import EditUser from './routes/EditUser';
 import ClusterPanel from './routes/ClusterPanel';
+import ClusterDetails from "./components/ClusterDetails";
 
 const App = () => {
     return (
@@ -18,6 +19,11 @@ const App = () => {
                         <Route exact path="/register" component={RegisterPage}/>
                         <Route exact path="/EditUser" component={EditUser}/>
                         <Route exact path="/ClusterPanel" component={ClusterPanel}/>
+                        <Route
+                          exact
+                          path="/clusterDetails/:groupid"
+                          component={ClusterDetails}
+                        />
                     </Switch>
                 </Router>
             </div>
