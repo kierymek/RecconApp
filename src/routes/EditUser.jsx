@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import ReconsFinder from "../apis/ReconsFinder";
-import {printAlert} from "../context/Functions"; 
+import { getCookie, printAlert } from "../context/Functions";
 
-const Register = () => {
-  const { idHotel, idOption } = useParams();
+const EditUser = () => {
   const history = useHistory();
 
   const [name, setName] = useState("");
@@ -13,18 +12,52 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [selectedClient, setSelectedClient] = useState(null);
 
-  const handleRegister = async (e) => {
+  //   const { idClient } = useParams();
+  //   const { selectedClient, setSelectedClient } = useContext(ReconsContext);
+  //   const { selectedReservations, setSelectedReservations } = useContext(
+  //     ReconsContext
+  //   );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ReconsFinder.get("/logged", {
+          headers: {
+            jwt: getCookie("jwt"),
+          },
+        });
+        console.log(response.data);
+        setName(response.data.firstname);
+        setSurname(response.data.lastname);
+        setEmail(response.data.email);
+      } catch (e) {
+        console.log(e);
+        printAlert(e);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await ReconsFinder.post("auth/register", {
-        firstname: name,
-        lastname: surname,
-        password,
-        email,
-      });
+      const response = await ReconsFinder.put(
+        "auth/logged",
+        {
+          firstname: name,
+          lastname: surname,
+          password,
+          email,
+        },
+        {
+          headers: {
+            jwt: getCookie("jwt"),
+          },
+        }
+      );
       console.log(response.data);
-      setSelectedClient(response.data.data);
-      history.push("/");
+      document.cookie = `jwt=${response.data.jwt}`;
+      history.push("/userPanel");
     } catch (e) {
       printAlert(e);
     }
@@ -33,12 +66,12 @@ const Register = () => {
   return (
     <>
       <h1 className="font-weight-bold display-3 text-center">
-        Panel rejestracji
+        Edytuj dane użytkownika
       </h1>
       <br />
       <div className="mb-2 text-left">
-        <form action="" onSubmit={handleRegister}>
-          <h2>Nowy użytkownik</h2> <br />
+        <form action="" onSubmit={handleUpdate}>
+          <h2>Wprowadź nowe dane użytkownika</h2> <br />
           <div className="form-col" style={{ maxWidth: "250px" }}>
             <div className="form-group">
               <label htmlFor="name">Imię</label>
@@ -84,7 +117,7 @@ const Register = () => {
             </div>
           </div>
           <button type="submit" className="btn btn-danger">
-            Zarejestruj
+            Edytuj dane
           </button>
         </form>
       </div>
@@ -92,4 +125,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default EditUser;

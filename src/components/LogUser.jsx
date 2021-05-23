@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
+import {printAlert} from "../context/Functions"; 
 
 const LogUser = () => {
   const history = useHistory();
@@ -11,7 +12,7 @@ const LogUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await ReconsFinder.post("/auth/login", {
+      const response = await ReconsFinder.post("auth/login", {
         password,
         email,
       });
@@ -21,21 +22,7 @@ const LogUser = () => {
       console.log(document.cookie);
       history.push("/userPanel");
     } catch (e) {
-      console.log(e);
-      if (e.response !== undefined) {
-        console.log(e.response);
-        const responseText = JSON.parse(e.response.request.responseText);
-        let response = "";
-        for (const [key, value] of Object.entries(responseText)) {
-          response += "input name -> " + key + "\ninput errors:  ";
-
-          for (const message of Object.values(value)) {
-            response += message + "\n";
-          }
-          response += "\n";
-        }
-        alert(response);
-      }
+        printAlert(e);
     }
     // try {
     //     const response = await ReconsFinder.get(`/clients/login/${nickname}/${password}`);

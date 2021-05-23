@@ -2,13 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import { ReconsContext } from "../context/ReconsContext";
+import { getCookie, printAlert } from "../context/Functions";
 import Cluster from "../components/Cluster";
 import FindUser from "../components/FindUser";
 import Navbar from "../components/Navbar";
+
 const UserPanel = (props) => {
   const history = useHistory();
   const location = useLocation();
   const [loggedUser, setLoggedUser] = useState("");
+  const [reckonings, setReckonings] = useState("");
 
   //   const { idClient } = useParams();
   //   const { selectedClient, setSelectedClient } = useContext(ReconsContext);
@@ -16,51 +19,27 @@ const UserPanel = (props) => {
   //     ReconsContext
   //   );
 
-  function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(";");
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) === " ") {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await ReconsFinder.get("/auth/logged", {
+        const response = await ReconsFinder.get("auth/logged", {
           headers: {
             jwt: getCookie("jwt"),
           },
         });
+        const reckoningsResponse = await ReconsFinder.get(
+          "/reckonings/reckoningPositionsByUser/2",
+          {
+            headers: {
+              jwt: getCookie("jwt"),
+            },
+          }
+        );
         console.log(response.data);
         setLoggedUser(response.data);
+        setReckonings(reckoningsResponse.data);
       } catch (e) {
-        console.log(e);
-        if (e.response !== undefined) {
-          console.log(e.response);
-          const responseText = JSON.parse(e.response.request.responseText);
-          let response = "";
-          for (const [key, value] of Object.entries(responseText)) {
-            response += "input name -> " + key + "\ninput errors:  ";
-            if (typeof value === "string") {
-              response += value + "\n";
-              continue;
-            }
-            for (const message of Object.values(value)) {
-              response += message + "\n";
-            }
-            response += "\n";
-          }
-          alert(response);
-        }
+        printAlert(e);
       }
     };
     fetchData();
@@ -80,12 +59,14 @@ const UserPanel = (props) => {
 
   const handleEdit = async (e) => {
     try {
-      history.push("/userDataEditPanel");
+      history.push("/EditUser");
     } catch (err) {
-      console.log(err);
+      printAlert(err);
     }
   };
 
+  let income = 0;
+  let outcome = 0;
   return (
     <div>
       <Navbar />
@@ -111,8 +92,8 @@ const UserPanel = (props) => {
                     <td>{loggedUser.lastname}</td>
                   </tr>
                   <tr>
-                    <th scope="col">Username</th>
-                    <td>{loggedUser.username}</td>
+                    <th scope="col">User ID</th>
+                    <td>{loggedUser.userid}</td>
                   </tr>
                   <tr>
                     <th scope="col">Email</th>
@@ -127,20 +108,64 @@ const UserPanel = (props) => {
                 Edytuj dane
               </button>
             </div>
-            <div className="col-8">
-              <h3>Rachunki</h3>
+            <div className="col-4">
+              <h3>Rachunki gdzie jesteśmy dłużnikiem</h3>
               <table className="table table-primary table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">id</th>
-                    <th scope="col">użytkownik</th>
-                    <th scope="col">grupa</th>
-                    <th scope="col">bilans</th>
-                    <th scope="col">zapłacono</th>
-                    <th scope="col">Zmień status</th>
+                    <th scope="col">tytuł</th>
+                    <th scope="col">kwota</th>
+                    <th scope="col">data</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                  {reckonings.length &&
+                    reckonings.map((recon) => {
+                      outcome += recon.amount;
+                      return (
+                        <tr key={recon.reckoningpositionid}>
+                          <td>{recon.name}</td>
+                          <td>{recon.amount}</td>
+                          <td>{recon.paymentdate}</td>
+                        </tr>
+                      );
+                    })}
+                     <tr>
+                          <td>{"sum"}</td>
+                          <td>{outcome}</td>
+                          <td></td>
+                        </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="col-4">
+              <h3>Rachunki których jesteśmy właścicielem</h3>
+              <table className="table table-primary table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">tytuł</th>
+                    <th scope="col">kwota</th>
+                    <th scope="col">data</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reckonings.length &&
+                    reckonings.map((recon) => {
+                      income += recon.amount;
+                      return (
+                        <tr key={recon.reckoningpositionid}>
+                          <td>{recon.name}</td>
+                          <td>{recon.amount}</td>
+                          <td>{recon.paymentdate}</td>
+                        </tr>
+                      );
+                    })}
+                    <tr>
+                          <td>{"sum"}</td>
+                          <td>{income}</td>
+                          <td></td>
+                        </tr>
+                </tbody>
               </table>
             </div>
           </div>
