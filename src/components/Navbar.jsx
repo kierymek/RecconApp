@@ -54,7 +54,11 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" href="#" style={{ color: "white" }}>
+              <a
+                className="nav-link"
+                href="/ClusterPanel"
+                style={{ color: "white" }}
+              >
                 Moje grupy
               </a>
             </li>

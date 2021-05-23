@@ -1,23 +1,24 @@
-import React, { useContext, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import { getCookie, printAlert } from "../context/Functions";
 
-const AddCluster = () => {
+const AddRecon = ({groupid, loggedUser}) => {
   const history = useHistory();
 
   const [name, setName] = useState("");
-  const [startDate, setStartDate] = useState("2021-05-23T00:36:00Z");
+  const [deadline, setDeadline] = useState("2021-05-23T00:36:00Z");
 
-  const handleAddCluster = async (e) => {
-    console.log("Jebać IOIOIIIOIOIOI");
+  const handleAddRecon = async (e) => {
     e.preventDefault();
     try {
       const response = await ReconsFinder.post(
-        "groups/group",
+        "reckonings/reckoning",
         {
           name,
-          startdate: startDate,
+          deadline,
+          groupid,
+          author : loggedUser.userid,
         },
         {
           headers: {
@@ -34,16 +35,13 @@ const AddCluster = () => {
 
   return (
     <>
-      <h1 className="font-weight-bold display-3 text-center">
-        Tworzenie nowej grupy
-      </h1>
       <br />
       <div className="mb-2 text-left">
-        <form action="" onSubmit={handleAddCluster}>
-          <h2>Nowa grupa</h2> <br />
+        <form action="" onSubmit={handleAddRecon}>
+          <h2>Dodawanie nowego rachunku</h2> <br />
           <div className="form-col" style={{ maxWidth: "250px" }}>
             <div className="form-group">
-              <label htmlFor="name">Nazwa grupy</label>
+              <label htmlFor="name">Tytuł rachunku</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -55,8 +53,8 @@ const AddCluster = () => {
             </div>
             <div className="form-group" style={{marginRight:"20px"}}>
                         <p>Data utworzenia</p>
-                        <input type="date" id="start" name="trip-start"
-                            value={startDate} onChange={e => setStartDate(e.target.value)}
+                        <input type="date" id="start" name="recon-start"
+                            value={deadline} onChange={e => setDeadline(e.target.value)}
                             min={new Date().toISOString().slice(0, 10)} max="2022-12-31"></input>
 
                     </div>
@@ -70,4 +68,4 @@ const AddCluster = () => {
   );
 };
 
-export default AddCluster;
+export default AddRecon;

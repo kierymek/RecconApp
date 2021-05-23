@@ -10,7 +10,7 @@ const Cluster = ({ clusters }) => {
     <div>
       <h1>Moje grupy</h1>
       <div className="row row-cols-3 mb-2">
-        {clusters.map((cluster) => {
+        {clusters.length && clusters.map((cluster) => {
           return (
             <div
               key={cluster.groupid}

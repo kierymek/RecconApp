@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
+import AddRecon from "../components/AddRecon";
+import Navbar from "../components/Navbar";
 
 const ClusterDetails = () => {
   const { groupid } = useParams();
   const [details, setDetails] = useState("");
+  const [loggedUser, setLoggedUser] = useState("");
   const [members, setMembers] = useState("Brak członków");
   function getCookie(cname) {
     var name = cname + "=";
@@ -30,6 +33,12 @@ const ClusterDetails = () => {
             jwt: getCookie("jwt"),
           },
         });
+        const userResponse = await ReconsFinder.get(`/auth/logged`, {
+          headers: {
+            jwt: getCookie("jwt"),
+          },
+        });
+        setLoggedUser(userResponse.data);
 
         setDetails(response.data);
         console.log(response.data);
@@ -77,9 +86,15 @@ const ClusterDetails = () => {
     fetchData();
   }, []);
   console.log("AAA", groupid);
+  console.log(getCookie("jwt"));
 
   return (
     <div>
+      <Navbar />
+      <h1 className="text-center display-2" style={{ paddingBottom: "30px" }}>
+        Panel grupy
+      </h1>
+      <AddRecon groupid={groupid} loggedUser={loggedUser}/>
       <h1 className="font-weight-bold display-3 text-center">{details.name}</h1>
       <div className="display-4 text-center">{members}</div>
     </div>

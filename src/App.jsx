@@ -6,7 +6,7 @@ import UserPanel from './routes/UserPanel';
 import RegisterPage from './routes/RegisterPage';
 import EditUser from './routes/EditUser';
 import ClusterPanel from './routes/ClusterPanel';
-import ClusterDetails from "./components/ClusterDetails";
+import ClusterDetails from "./routes/ClusterDetails";
 
 const App = () => {
     return (

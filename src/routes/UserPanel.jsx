@@ -28,7 +28,7 @@ const UserPanel = (props) => {
           },
         });
         const reckoningsResponse = await ReconsFinder.get(
-          "/reckonings/reckoningPositionsByUser/2",
+          "reckonings/reckoningPositionsByUser/2",
           {
             headers: {
               jwt: getCookie("jwt"),
@@ -36,6 +36,7 @@ const UserPanel = (props) => {
           }
         );
         console.log(response.data);
+        console.log(reckoningsResponse.data);
         setLoggedUser(response.data);
         setReckonings(reckoningsResponse.data);
       } catch (e) {
@@ -130,11 +131,11 @@ const UserPanel = (props) => {
                         </tr>
                       );
                     })}
-                     <tr>
-                          <td>{"sum"}</td>
-                          <td>{outcome}</td>
-                          <td></td>
-                        </tr>
+                  <tr>
+                    <td>{"sum"}</td>
+                    <td>{outcome}</td>
+                    <td></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -160,11 +161,11 @@ const UserPanel = (props) => {
                         </tr>
                       );
                     })}
-                    <tr>
-                          <td>{"sum"}</td>
-                          <td>{income}</td>
-                          <td></td>
-                        </tr>
+                  <tr>
+                    <td>{"sum"}</td>
+                    <td>{income}</td>
+                    <td></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
