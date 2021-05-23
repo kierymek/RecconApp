@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import { getCookie, printAlert } from "../context/Functions";
 
-const AddRecon = ({groupid, loggedUser}) => {
+const AddRecon = ({ groupid, loggedUser }) => {
   const history = useHistory();
 
   const [name, setName] = useState("");
@@ -18,7 +18,7 @@ const AddRecon = ({groupid, loggedUser}) => {
           name,
           deadline,
           groupid,
-          author : loggedUser.userid,
+          author: loggedUser.userid,
         },
         {
           headers: {
@@ -51,16 +51,21 @@ const AddRecon = ({groupid, loggedUser}) => {
                 required
               />
             </div>
-            <div className="form-group" style={{marginRight:"20px"}}>
-                        <p>Data utworzenia</p>
-                        <input type="date" id="start" name="recon-start"
-                            value={deadline} onChange={e => setDeadline(e.target.value)}
-                            min={new Date().toISOString().slice(0, 10)} max="2022-12-31"></input>
-
-                    </div>
+            <div className="form-group" style={{ marginRight: "20px" }}>
+              <p>Data utworzenia</p>
+              <input
+                type="date"
+                id="start"
+                name="recon-start"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+                min={new Date().toISOString().slice(0, 10)}
+                max="2022-12-31"
+              ></input>
+            </div>
           </div>
           <button type="submit" className="btn btn-success">
-            Utwórz grupę
+            Dodaj rachunek
           </button>
         </form>
       </div>

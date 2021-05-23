@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { /*useHistory,*/ useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
-
+import { getCookie } from "../context/Functions";
 //const history = useHistory();
 
 const FindUser = () => {
@@ -11,21 +11,6 @@ const FindUser = () => {
   const [lastName, setLastname] = useState("");
   const [users, setUsers] = useState(null);
 
-  function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(";");
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) === " ") {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
   function addUserToCluster(useremail) {
     console.log(useremail);
     //groupId
@@ -38,6 +23,7 @@ const FindUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
     try {
       const response = await ReconsFinder.get(
         `/auth/search?email=${email}&firstname=${firstName}&lastname=${lastName}`,
@@ -142,6 +128,17 @@ const FindUser = () => {
           </div>
           <button type="submit" className="btn btn-primary">
             Szukaj
+          </button>
+
+          <button
+            className="btn btn-warning"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setUsers(null);
+            }}
+          >
+            Ukryj wyszukanych
           </button>
         </form>
         <p></p> {/*To nie powinno tak być*/}
