@@ -5,6 +5,7 @@ import AddRecon from "../components/AddRecon";
 import Navbar from "../components/Navbar";
 import FindUser from "../components/FindUser";
 import { printAlert } from "../context/Functions";
+import ReckonDetails from "../routes/ReconDetails";
 
 const ClusterDetails = () => {
   const history = useHistory();
@@ -84,8 +85,14 @@ const ClusterDetails = () => {
           <AddRecon groupid={groupid} loggedUser={loggedUser} />
           <FindUser groupid={groupid} />
         </div>
-        <div className="col" style={{
-          textAlign:"center", justifyContent:"center", paddingTop:"30px"}}>
+        <div
+          className="col"
+          style={{
+            textAlign: "center",
+            justifyContent: "center",
+            paddingTop: "30px",
+          }}
+        >
           <table className="table table-primary table-hover">
             <thead>
               <tr>
@@ -98,6 +105,7 @@ const ClusterDetails = () => {
           </table>
         </div>
       </div>
+      <ReckonDetails></ReckonDetails>
     </div>
   );
 };
