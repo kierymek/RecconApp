@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import ReconsFinder from "../apis/ReconsFinder";
 import { getCookie, printAlert } from "../context/Functions";
-
+import Navbar from "../components/Navbar";
 const EditUser = () => {
   const history = useHistory();
 
@@ -65,6 +65,7 @@ const EditUser = () => {
 
   return (
     <>
+      <Navbar />
       <h1 className="font-weight-bold display-3 text-center">
         Edytuj dane użytkownika
       </h1>

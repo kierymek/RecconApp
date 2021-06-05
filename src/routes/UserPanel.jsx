@@ -173,9 +173,7 @@ const UserPanel = (props) => {
           </div>
         </>
       }
-      <div>
-        <FindUser />
-      </div>
+
       <div>
         <Cluster
           clusters={[

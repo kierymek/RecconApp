@@ -65,7 +65,7 @@ const AddRecon = ({ groupid, loggedUser }) => {
             </div>
           </div>
           <button type="submit" className="btn btn-success">
-            Utwórz rachunek
+            Dodaj rachunek
           </button>
         </form>
       </div>

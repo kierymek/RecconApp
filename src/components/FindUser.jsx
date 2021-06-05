@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { /*useHistory,*/ useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
-
+import { getCookie } from "../context/Functions";
 //const history = useHistory();
 
 const FindUser = () => {
@@ -50,6 +50,7 @@ const FindUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
     try {
       const response = await ReconsFinder.get(
         `/auth/search?email=${email}&firstname=${firstName}&lastname=${lastName}`,
@@ -155,6 +156,17 @@ const FindUser = () => {
           </div>
           <button type="submit" className="btn btn-primary">
             Szukaj
+          </button>
+
+          <button
+            className="btn btn-warning"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setUsers(null);
+            }}
+          >
+            Ukryj wyszukanych
           </button>
         </form>
         <p></p> {/*To nie powinno tak być*/}

@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import AddRecon from "../components/AddRecon";
 import Navbar from "../components/Navbar";
+import FindUser from "../components/FindUser";
 
 const ClusterDetails = () => {
   const { groupid } = useParams();
@@ -94,8 +95,18 @@ const ClusterDetails = () => {
       <h1 className="text-center display-2" style={{ paddingBottom: "30px" }}>
         Panel grupy
       </h1>
-      <AddRecon groupid={groupid} loggedUser={loggedUser}/>
       <h1 className="font-weight-bold display-3 text-center">{details.name}</h1>
+      <div
+        className="text-white bg-secondary mb-3 mr-2"
+        style={{ padding: "5%" }}
+      >
+        <div>
+          <AddRecon groupid={groupid} loggedUser={loggedUser} />
+        </div>
+        <div>
+          <FindUser />
+        </div>
+      </div>
       <div className="display-4 text-center">{members}</div>
     </div>
   );
