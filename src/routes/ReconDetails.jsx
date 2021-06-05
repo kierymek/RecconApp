@@ -1,14 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
+import Navbar from "../components/Navbar";
 import { getCookie, printAlert } from "../context/Functions";
+import { ReconsContext } from "../context/ReconsContext";
 
 const ReckonDetails = () => {
   const history = useHistory();
+  const location = useLocation();
   const [loggedUser, setLoggedUser] = useState("");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(0);
   const [payments, setPayments] = useState([]);
+  const [paymentDate, setPaymentDate] = useState("");
+  const { selectedRecon } = useContext(ReconsContext);
+  const [currentRecon, setCurrentRecon] = useState(selectedRecon);
 
   const { reckonId } = useParams();
   //   const [loggedUser, setLoggedUser] = useState("");
@@ -23,8 +29,8 @@ const ReckonDetails = () => {
           amount,
           groupmemberid: loggedUser.userid,
           /**Gdy reckonId bedzie poprawnie stwaiane, to trzeba tu to dac */
-          reckoningid: 30,
-          paymentdate: null,
+          reckoningid: reckonId,
+          paymentdate: paymentDate + "T00:00:00Z",
         },
         {
           headers: {
@@ -32,6 +38,8 @@ const ReckonDetails = () => {
           },
         }
       );
+      history.push("/");
+      history.push(location);
       console.log(response);
     } catch (e) {
       console.log(e);
@@ -47,7 +55,7 @@ const ReckonDetails = () => {
         });
         setLoggedUser(responseUser.data);
         const response = await ReconsFinder.get(
-          `reckonings/reckoningPosition/30`,
+          `reckonings/reckoningPosition/${reckonId}`,
           {
             headers: {
               jwt: getCookie("jwt"),
@@ -63,7 +71,9 @@ const ReckonDetails = () => {
                 <td>{payment.groupmemberid}</td>
                 <td>{payment.amount}</td>
                 <td>
-                  {payment.paymentdate ? payment.paymentdate : "Nie podano"}
+                  {payment.paymentdate
+                    ? payment.paymentdate.split("T", 1)
+                    : "Nie podano"}
                 </td>
               </tr>
             );
@@ -80,8 +90,18 @@ const ReckonDetails = () => {
 
   return (
     <>
-      <div>
-        <div className="mb-2 text-left">
+      <Navbar />
+      <div className="text-center display-2" style={{ paddingBottom: "30px" }}>
+        <h1>Szczegóły rachunku</h1>
+        <h5>Tytuł: {currentRecon.name || "brak"}</h5>
+        <h5>właściciel: {currentRecon.author || "brak"}</h5>
+        <h5>
+          termin płatności: {currentRecon.deadline?.split("T", 1) || "brak"}
+        </h5>
+      </div>
+
+      <div className="row">
+        <div className="col mb-2 text-left">
           <form action="" onSubmit={(e) => handleOnAddReckon(e)}>
             <div className="form-col" style={{ maxWidth: "250px" }}>
               <div className="form-group">
@@ -103,8 +123,22 @@ const ReckonDetails = () => {
                   id="name"
                   type="number"
                   className="form-control"
+                  min={0}
                   required
                 />
+              </div>
+              <div className="form-group" style={{ marginRight: "20px" }}>
+                <p>termin płatności</p>
+                <input
+                  type="date"
+                  id="start"
+                  name="recon-start"
+                  value={paymentDate}
+                  onChange={(e) => setPaymentDate(e.target.value)}
+                  min={new Date().toISOString().slice(0, 10)}
+                  max="2022-12-31"
+                  required
+                ></input>
               </div>
             </div>
             <button type="submit" className="btn btn-success">
@@ -112,17 +146,19 @@ const ReckonDetails = () => {
             </button>
           </form>
         </div>
-        <table className="table table-primary table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Nazwa</th>
-              <th scope="col">Wpłacający</th>
-              <th scope="col">Kwota</th>
-              <th scope="col">Data zapłaty</th>
-            </tr>
-          </thead>
-          <tbody>{payments}</tbody>
-        </table>
+        <div className="col">
+          <table className="table table-warning table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Nazwa</th>
+                <th scope="col">Wpłacający</th>
+                <th scope="col">Kwota</th>
+                <th scope="col">Data zapłaty</th>
+              </tr>
+            </thead>
+            <tbody>{payments}</tbody>
+          </table>
+        </div>
       </div>
     </>
   );

@@ -8,12 +8,13 @@ import { getCookie, printAlert } from "../context/Functions";
 import { ReconsContext } from "../context/ReconsContext";
 
 const ClusterDetails = () => {
+  const history = useHistory();
   const { groupid } = useParams();
   const [details, setDetails] = useState("");
   const [loggedUser, setLoggedUser] = useState("");
   const [members, setMembers] = useState("");
   const [recons, setRecons] = useState("");
-  const { foundUsers } = useContext(ReconsContext);
+  const { foundUsers, setSelectedRecon } = useContext(ReconsContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +43,10 @@ const ClusterDetails = () => {
           setRecons(
             reconsResponse.data.map((recon) => {
               return (
-                <tr key={recon.reckoningid}>
+                <tr key={recon.reckoningid} onClick={(e) => {
+                  history.push(`/ReckonDetails/${recon.reckoningid}`);
+                  setSelectedRecon(recon);
+                  }}>
                   <td>{recon.name}</td>
                   <td>{recon.author}</td>
                   <td>{recon.deadline.split("T", 1)}</td>
@@ -63,7 +67,7 @@ const ClusterDetails = () => {
           setMembers(
             response.data.members.map((member) => {
               return (
-                <tr key={member.userid}>
+                <tr key={member.userid} >
                   <td>{member.firstname}</td>
                   <td>{member.lastname}</td>
                   <td>{member.email}</td>
@@ -137,7 +141,6 @@ const ClusterDetails = () => {
         </div>
         <div className="row row-cols-3 mb-2" style={{ padding: "20px" }}>{foundUsers}</div>
       </div>
-      <ReckonDetails></ReckonDetails>
     </div>
   );
 };

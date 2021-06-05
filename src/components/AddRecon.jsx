@@ -8,7 +8,7 @@ const AddRecon = ({ groupid, loggedUser }) => {
   const location = useLocation();
 
   const [name, setName] = useState("");
-  const [deadline, setDeadline] = useState("2021-05-23");
+  const [deadline, setDeadline] = useState("");
 
   const handleAddRecon = async (e) => {
     e.preventDefault();

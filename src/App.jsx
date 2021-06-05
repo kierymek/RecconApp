@@ -7,6 +7,7 @@ import RegisterPage from './routes/RegisterPage';
 import EditUser from './routes/EditUser';
 import ClusterPanel from './routes/ClusterPanel';
 import ClusterDetails from "./routes/ClusterDetails";
+import ReckonDetails from "./routes/ReconDetails";
 
 const App = () => {
     return (
@@ -24,6 +25,7 @@ const App = () => {
                           path="/clusterDetails/:groupid"
                           component={ClusterDetails}
                         />
+                        <Route exact path="/ReckonDetails/:reckonId" component={ReckonDetails}/>
                     </Switch>
                 </Router>
             </div>
