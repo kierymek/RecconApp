@@ -1,15 +1,22 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { /*useHistory,*/ useParams } from "react-router-dom";
+import {
+  /*useHistory,*/ useHistory,
+  useLocation,
+  useParams,
+} from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import { getCookie } from "../context/Functions";
+import { ReconsContext } from "../context/ReconsContext";
 //const history = useHistory();
 
 const FindUser = ({ groupid }) => {
+  const history = useHistory();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [firstName, setFirstname] = useState("");
   const [lastName, setLastname] = useState("");
-  const [users, setUsers] = useState(null);
+  const { setFoundUsers } = useContext(ReconsContext);
 
   async function addUserToCluster(user) {
     console.log(user);
@@ -26,6 +33,8 @@ const FindUser = ({ groupid }) => {
       }
     );
     console.log("added user: ", addUserResponse);
+    history.push("/");
+    history.push(location);
     //groupId
     try {
     } catch (e) {
@@ -48,7 +57,7 @@ const FindUser = ({ groupid }) => {
       );
       console.log(response.data);
       if (response.data.length == 0) alert("Brak użytkownika");
-      setUsers(
+      setFoundUsers(
         response.data.map((user) => {
           return (
             <div
@@ -73,16 +82,13 @@ const FindUser = ({ groupid }) => {
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td>
-                      <button
-                        type="submit"
-                        onClick={() => addUserToCluster(user)}
-                        className="btn btn-secondary"
-                      >
-                        Dodaj do grupy
-                      </button>
-                    </td>
-                    <td></td>
+                    <button
+                      type="submit"
+                      onClick={() => addUserToCluster(user)}
+                      className="btn btn-danger"
+                    >
+                      Dodaj do grupy
+                    </button>
                   </tr>
                 </tfoot>
               </table>
@@ -98,7 +104,7 @@ const FindUser = ({ groupid }) => {
   return (
     <div>
       <br />
-      <h1>Wyszukaj Użytkownika</h1>
+      <h2>Wyszukaj Użytkownika</h2>
       <br />
       <div style={{ width: "60%" }}>
         <form action="" onSubmit={handleSubmit}>
@@ -149,7 +155,7 @@ const FindUser = ({ groupid }) => {
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              setUsers(null);
+              setFoundUsers(null);
             }}
           >
             Ukryj wyszukanych
@@ -157,7 +163,6 @@ const FindUser = ({ groupid }) => {
         </form>
         <p></p> {/*To nie powinno tak być*/}
       </div>
-      <div className="row row-cols-3 mb-2">{users}</div>
     </div>
   );
 };

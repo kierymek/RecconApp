@@ -3,28 +3,14 @@ import React, {useState, createContext} from "react";
 export const ReconsContext = createContext();
 
 export const ReconsContextProvider = props => {
-    const [hotels, setHotels] = useState([]);
-    const [selectedHotel, setSelectedHotel] = useState(null);
-    const [cities, setCities] = useState([]);
-    const [countries, setCountries] = useState([]);
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [selectedClient, setSelectedClient] = useState(null);
-    const [selectedReservations, setSelectedReservations] = useState([]);
+    const [foundUsers, setFoundUsers] = useState([]);
 
-    const addCountries = (country) => {
-        setCountries([...countries, country]);
-    }
-
-    const addCities = (city) => {
-        setCities([...cities, city]);
-    }
-
-    const addHotels = (hotel) => {
-        setHotels([...hotels, hotel]);
+    const addFoundUsers = (user) => {
+        setFoundUsers([...foundUsers, user]);
     }
     
     return (
-        <ReconsContext.Provider value={{hotels, setHotels, addHotels, selectedHotel, setSelectedHotel, cities, setCities, addCities, countries, setCountries, addCountries, selectedOption, setSelectedOption, selectedClient, setSelectedClient, selectedReservations, setSelectedReservations}}>
+        <ReconsContext.Provider value={{foundUsers, setFoundUsers, addFoundUsers}}>
             {props.children}
         </ReconsContext.Provider>
     )

@@ -1,22 +1,24 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import { getCookie, printAlert } from "../context/Functions";
 
 const AddRecon = ({ groupid, loggedUser }) => {
   const history = useHistory();
+  const location = useLocation();
 
   const [name, setName] = useState("");
   const [deadline, setDeadline] = useState("2021-05-23");
 
   const handleAddRecon = async (e) => {
     e.preventDefault();
+
     try {
       const response = await ReconsFinder.post(
         "reckonings/reckoning",
         {
           name,
-          deadline: deadline + "T00:36:00Z",
+          deadline: deadline + "T00:00:00Z",
           groupid,
           author: loggedUser.userid,
         },
@@ -28,7 +30,9 @@ const AddRecon = ({ groupid, loggedUser }) => {
       );
       console.log(response.data);
       history.push(`/ClusterDetails/${groupid}`);
-      alert("Dodano użytkownika");
+      alert("Dodano rachunek");
+      history.push("/");
+      history.push(location);
     } catch (e) {
       printAlert(e);
     }

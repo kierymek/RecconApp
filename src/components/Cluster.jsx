@@ -13,7 +13,7 @@ const Cluster = ({ clusters }) => {
       <h1>Moje grupy</h1>
       <br />
       <div className="row row-cols-3 mb-2">
-        {clusters.length &&
+        {(clusters.length &&
           clusters.map((cluster) => {
             return (
               <div
@@ -36,7 +36,7 @@ const Cluster = ({ clusters }) => {
                 </div>
               </div>
             );
-          })}
+          })) || <h4>Brak grup</h4>}
       </div>
     </div>
   );
