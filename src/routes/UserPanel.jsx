@@ -12,7 +12,7 @@ const UserPanel = (props) => {
   const location = useLocation();
   const [loggedUser, setLoggedUser] = useState("");
   const [reckonings, setReckonings] = useState("");
-
+  const [groups, setGroups] = useState("");
   //   const { idClient } = useParams();
   //   const { selectedClient, setSelectedClient } = useContext(ReconsContext);
   //   const { selectedReservations, setSelectedReservations } = useContext(
@@ -40,6 +40,17 @@ const UserPanel = (props) => {
         console.log(reckoningsResponse.data);
         setLoggedUser(response.data);
         setReckonings(reckoningsResponse.data);
+
+        const groupsResponse = await ReconsFinder.get(
+          `/groups/groupinfo/${response.data.userid}`,
+          {
+            headers: {
+              jwt: getCookie("jwt"),
+            },
+          }
+        );
+        console.log(groupsResponse);
+        setGroups(groupsResponse.data);
       } catch (e) {
         printAlert(e);
       }
@@ -83,13 +94,18 @@ const UserPanel = (props) => {
           <div className="row">
             <div className="col-4">
               <table className="table caption-top table-secondary">
-                <caption><div classname="row"><span>Dane użytkownika</span><button
-                onClick={(e) => handleEdit(e)}
-                className="btn btn-primary"
-                style={{float:"right"}}
-              >
-                Edytuj dane
-              </button></div></caption>
+                <caption>
+                  <div classname="row">
+                    <span>Dane użytkownika</span>
+                    <button
+                      onClick={(e) => handleEdit(e)}
+                      className="btn btn-primary"
+                      style={{ float: "right" }}
+                    >
+                      Edytuj dane
+                    </button>
+                  </div>
+                </caption>
                 <thead>
                   <tr>
                     <th scope="col">Imię</th>
@@ -175,13 +191,7 @@ const UserPanel = (props) => {
       }
 
       <div>
-        <Cluster
-          clusters={[
-            { groupid: 1, name: "Aa", startdate: "111Taaa" },
-            { groupid: 2, name: "Aa", startdate: "111Taaa" },
-            { groupid: 3, name: "Aa", startdate: "111Taaa" },
-          ]}
-        />
+        <Cluster clusters={groups} />
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ const Cluster = ({ clusters }) => {
             return (
               <div
                 key={cluster.groupid}
-                className="card text-white bg-secondary mb-3 mr-4"
+                className="card text-white bg-success mb-3 mr-4"
                 style={{ maxWidth: "30%" }}
                 onClick={() => moveToDetails(cluster.groupid)}
               >

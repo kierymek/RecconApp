@@ -27,7 +27,8 @@ const AddRecon = ({ groupid, loggedUser }) => {
         }
       );
       console.log(response.data);
-      history.push("/ClusterPanel");
+      history.push(`/ClusterDetails/${groupid}`);
+      alert("Dodano użytkownika");
     } catch (e) {
       printAlert(e);
     }
