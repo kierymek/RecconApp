@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 
 const ClusterPanel = () => {
   const [groups, setGroups] = useState("");
+  const [loggedUser, setLoggedUser] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,6 +17,9 @@ const ClusterPanel = () => {
             jwt: getCookie("jwt"),
           },
         });
+        console.log(response);
+        setLoggedUser(response.data);
+        console.log("logged user: ", response.data);
         const groupsResponse = await ReconsFinder.get(
           `/groups/groupinfo/${response.data.userid}`,
           {
@@ -24,7 +28,6 @@ const ClusterPanel = () => {
             },
           }
         );
-        console.log(response);
         console.log(groupsResponse);
         setGroups(groupsResponse.data);
       } catch (e) {
@@ -38,7 +41,10 @@ const ClusterPanel = () => {
   return (
     <div>
       <Navbar />
-      <AddCluster />
+      <h1 className="font-weight-bold display-3 text-center">
+        Zarządzaj swoimi grupami
+      </h1>
+      <AddCluster loggedUser={loggedUser} />
       <Cluster clusters={groups} />
     </div>
   );

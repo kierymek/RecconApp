@@ -26,8 +26,20 @@ const FindUser = () => {
     }
     return "";
   }
-  function addUserToCluster(useremail) {
-    console.log(useremail);
+  async function addUserToCluster(user) {
+    console.log(user);
+    const addUserResponse = await ReconsFinder.post(
+      "groups/groupmembers",
+      {
+        groupid: null,
+        userid: user.userid,
+      },
+      {
+        headers: {
+          jwt: getCookie("jwt"),
+        },
+      }
+    );
     //groupId
     try {
     } catch (e) {
@@ -77,7 +89,7 @@ const FindUser = () => {
                     <td>
                       <button
                         type="submit"
-                        onClick={() => addUserToCluster(user.email)}
+                        onClick={() => addUserToCluster(user)}
                         className="btn btn-secondary"
                       >
                         Dodaj do grupy
@@ -98,6 +110,7 @@ const FindUser = () => {
   };
   return (
     <div>
+      <br/>
       <h1>Wyszukaj Użytkownika</h1>
       <br />
       <div style={{ width: "60%" }}>

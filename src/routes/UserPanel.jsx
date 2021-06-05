@@ -27,6 +27,7 @@ const UserPanel = (props) => {
             jwt: getCookie("jwt"),
           },
         });
+        console.log("jwt: ", getCookie("jwt"));
         const reckoningsResponse = await ReconsFinder.get(
           "reckonings/reckoningPositionsByUser/2",
           {
@@ -82,7 +83,13 @@ const UserPanel = (props) => {
           <div className="row">
             <div className="col-4">
               <table className="table caption-top table-secondary">
-                <caption>Dane użytkownika</caption>
+                <caption><div classname="row"><span>Dane użytkownika</span><button
+                onClick={(e) => handleEdit(e)}
+                className="btn btn-primary"
+                style={{float:"right"}}
+              >
+                Edytuj dane
+              </button></div></caption>
                 <thead>
                   <tr>
                     <th scope="col">Imię</th>
@@ -102,12 +109,6 @@ const UserPanel = (props) => {
                   </tr>
                 </thead>
               </table>
-              <button
-                onClick={(e) => handleEdit(e)}
-                className="btn btn-primary"
-              >
-                Edytuj dane
-              </button>
             </div>
             <div className="col-4">
               <h3>Rachunki gdzie jesteśmy dłużnikiem</h3>
