@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import AddRecon from "../components/AddRecon";
 import Navbar from "../components/Navbar";
 import FindUser from "../components/FindUser";
+import { printAlert } from "../context/Functions";
 
 const ClusterDetails = () => {
+  const history = useHistory();
+  const location = useLocation();
   const { groupid } = useParams();
   const [details, setDetails] = useState("");
   const [loggedUser, setLoggedUser] = useState("");
@@ -44,49 +47,29 @@ const ClusterDetails = () => {
         setDetails(response.data);
         console.log(response.data);
         if (response.data.members) {
+          console.log("członkowie: ", response.data.members);
           setMembers(
             response.data.members.map((member) => {
-              <div
-                className="col-sm"
-                key={member.id}
-                style={{ maxWidth: "30%" }}
-              >
-                <table className="table caption-top table-secondary">
-                  <tbody>
-                    <tr>
-                      <td>Id:</td>
-                      <td>{member.id}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>;
+              return (
+                <tr key={member.userid}>
+                  <td>{member.firstname}</td>
+                  <td>{member.lastname}</td>
+                  <td>{member.email}</td>
+                </tr>
+              );
             })
           );
         }
+        console.log(members);
+        // history.push("/");
+        // history.push(location);
       } catch (e) {
         console.log(e);
-        if (e.response !== undefined) {
-          console.log(e.response);
-          const responseText = JSON.parse(e.response.request.responseText);
-          let response = "";
-          for (const [key, value] of Object.entries(responseText)) {
-            response += "input name -> " + key + "\ninput errors:  ";
-            if (typeof value === "string") {
-              response += value + "\n";
-              continue;
-            }
-            for (const message of Object.values(value)) {
-              response += message + "\n";
-            }
-            response += "\n";
-          }
-          alert(response);
-        }
+        printAlert(e);
       }
     };
     fetchData();
   }, []);
-  console.log("AAA", groupid);
   console.log(getCookie("jwt"));
 
   return (
@@ -96,18 +79,25 @@ const ClusterDetails = () => {
         Panel grupy
       </h1>
       <h1 className="font-weight-bold display-3 text-center">{details.name}</h1>
-      <div
-        className="text-white bg-secondary mb-3 mr-2"
-        style={{ padding: "5%" }}
-      >
-        <div>
+      <div className="row text-white bg-secondary">
+        <div className="col">
           <AddRecon groupid={groupid} loggedUser={loggedUser} />
+          <FindUser groupid={groupid} />
         </div>
-        <div>
-          <FindUser />
+        <div className="col" style={{
+          textAlign:"center", justifyContent:"center", paddingTop:"30px"}}>
+          <table className="table table-primary table-hover">
+            <thead>
+              <tr>
+                <th scope="col">imie</th>
+                <th scope="col">nazwisko</th>
+                <th scope="col">email</th>
+              </tr>
+            </thead>
+            <tbody>{members}</tbody>
+          </table>
         </div>
       </div>
-      <div className="display-4 text-center">{members}</div>
     </div>
   );
 };

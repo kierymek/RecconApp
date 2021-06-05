@@ -5,33 +5,18 @@ import ReconsFinder from "../apis/ReconsFinder";
 import { getCookie } from "../context/Functions";
 //const history = useHistory();
 
-const FindUser = () => {
+const FindUser = ({ groupid }) => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstname] = useState("");
   const [lastName, setLastname] = useState("");
   const [users, setUsers] = useState(null);
 
-  function getCookie(cname) {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(";");
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) === " ") {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
   async function addUserToCluster(user) {
     console.log(user);
     const addUserResponse = await ReconsFinder.post(
       "groups/groupmembers",
       {
-        groupid: null,
+        groupid,
         userid: user.userid,
       },
       {
@@ -40,6 +25,7 @@ const FindUser = () => {
         },
       }
     );
+    console.log("added user: ", addUserResponse);
     //groupId
     try {
     } catch (e) {
@@ -111,7 +97,7 @@ const FindUser = () => {
   };
   return (
     <div>
-      <br/>
+      <br />
       <h1>Wyszukaj Użytkownika</h1>
       <br />
       <div style={{ width: "60%" }}>

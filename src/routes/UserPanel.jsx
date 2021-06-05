@@ -69,6 +69,36 @@ const UserPanel = (props) => {
 
   let income = 0;
   let outcome = 0;
+  const reconingIncome = (reckonings.length &&
+    reckonings.map((recon) => {
+      income += recon.amount;
+      return (
+        <tr key={recon.reckoningpositionid}>
+          <td>{recon.name}</td>
+          <td>{recon.amount}</td>
+          <td>{recon.paymentdate}</td>
+        </tr>
+      );
+    })) || (
+    <tr>
+      <td>Brak rachunków</td>
+    </tr>
+  );
+  const reconingsOutcome = (reckonings.length &&
+    reckonings.map((recon) => {
+      outcome += recon.amount;
+      return (
+        <tr key={recon.reckoningpositionid}>
+          <td>{recon.name}</td>
+          <td>{recon.amount}</td>
+          <td>{recon.paymentdate}</td>
+        </tr>
+      );
+    })) || (
+    <tr>
+      <td>Brak rachunków</td>
+    </tr>
+  );
   return (
     <div>
       <Navbar />
@@ -83,13 +113,18 @@ const UserPanel = (props) => {
           <div className="row">
             <div className="col-4">
               <table className="table caption-top table-secondary">
-                <caption><div classname="row"><span>Dane użytkownika</span><button
-                onClick={(e) => handleEdit(e)}
-                className="btn btn-primary"
-                style={{float:"right"}}
-              >
-                Edytuj dane
-              </button></div></caption>
+                <caption>
+                  <div classname="row">
+                    <span>Dane użytkownika</span>
+                    <button
+                      onClick={(e) => handleEdit(e)}
+                      className="btn btn-primary"
+                      style={{ float: "right" }}
+                    >
+                      Edytuj dane
+                    </button>
+                  </div>
+                </caption>
                 <thead>
                   <tr>
                     <th scope="col">Imię</th>
@@ -121,19 +156,9 @@ const UserPanel = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {reckonings.length &&
-                    reckonings.map((recon) => {
-                      outcome += recon.amount;
-                      return (
-                        <tr key={recon.reckoningpositionid}>
-                          <td>{recon.name}</td>
-                          <td>{recon.amount}</td>
-                          <td>{recon.paymentdate}</td>
-                        </tr>
-                      );
-                    })}
+                  {reconingsOutcome}
                   <tr>
-                    <td>{"sum"}</td>
+                    <td>{"bilans"}</td>
                     <td>{outcome}</td>
                     <td></td>
                   </tr>
@@ -151,19 +176,9 @@ const UserPanel = (props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {reckonings.length &&
-                    reckonings.map((recon) => {
-                      income += recon.amount;
-                      return (
-                        <tr key={recon.reckoningpositionid}>
-                          <td>{recon.name}</td>
-                          <td>{recon.amount}</td>
-                          <td>{recon.paymentdate}</td>
-                        </tr>
-                      );
-                    })}
+                  {reconingIncome}
                   <tr>
-                    <td>{"sum"}</td>
+                    <td>{"bilans"}</td>
                     <td>{income}</td>
                     <td></td>
                   </tr>
