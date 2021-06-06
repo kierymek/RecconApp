@@ -10,10 +10,12 @@ const ReckonDetails = () => {
   const location = useLocation();
   const [loggedUser, setLoggedUser] = useState("");
   const [name, setName] = useState("");
+  const [debtor, setDebtor] = useState("");
   const [amount, setAmount] = useState(0);
   const [payments, setPayments] = useState([]);
   const [paymentDate, setPaymentDate] = useState("");
-  const { selectedRecon } = useContext(ReconsContext);
+  const { selectedRecon, groupMembers, setGroupMembers } =
+    useContext(ReconsContext);
   const [currentRecon, setCurrentRecon] = useState(selectedRecon);
 
   const { reckonId } = useParams();
@@ -22,15 +24,32 @@ const ReckonDetails = () => {
   const handleOnAddReckon = async (e) => {
     e.preventDefault();
     try {
+      const userResponse = await ReconsFinder.get(`/auth/logged`, {
+        headers: {
+          jwt: getCookie("jwt"),
+        },
+      });
+      console.log(
+        "userResponse: ",
+        userResponse,
+        "currentRecon: ",
+        currentRecon,
+        currentRecon.userid
+      );
+      // if (userResponse.data.userid !== currentRecon.author_detail.userid) {
+      //   alert(
+      //     "Nie możesz dodawać pozycji do rachunku nie będąc jego właścicielem!"
+      //   );
+      //   return;
+      // }
       const response = await ReconsFinder.post(
         "reckonings/reckoningPosition",
         {
           name,
           amount,
-          groupmemberid: loggedUser.userid,
-          /**Gdy reckonId bedzie poprawnie stwaiane, to trzeba tu to dac */
+          groupmemberid: debtor,
           reckoningid: reckonId,
-          paymentdate: paymentDate + "T00:00:00Z",
+          paymentdate: null,
         },
         {
           headers: {
@@ -38,11 +57,12 @@ const ReckonDetails = () => {
           },
         }
       );
+
       history.push("/");
       history.push(location);
       console.log(response);
     } catch (e) {
-      console.log(e);
+      printAlert(e);
     }
   };
   useEffect(() => {
@@ -62,23 +82,56 @@ const ReckonDetails = () => {
             },
           }
         );
-
+        const reconResponse = await ReconsFinder.get(
+          `/reckonings/reckoning/${reckonId}`,
+          {
+            headers: {
+              jwt: getCookie("jwt"),
+            },
+          }
+        );
+        !currentRecon && setCurrentRecon(reconResponse.data);
+        console.log("payments: ", response.data);
+        console.log("current recon: ", reconResponse.data);
         setPayments(
           response.data.map((payment) => {
             return (
               <tr key={payment.reckoningpositionid}>
                 <td>{payment.name}</td>
-                <td>{payment.groupmemberid}</td>
+                <td>{payment.author_detail.email}</td>
                 <td>{payment.amount}</td>
                 <td>
                   {payment.paymentdate
                     ? payment.paymentdate.split("T", 1)
-                    : "Nie podano"}
+                    : "Nie opłacono"}
                 </td>
               </tr>
             );
           })
         );
+
+        if (!groupMembers.length) {
+          const membersResponse = await ReconsFinder.get(
+            `/groups/group/${reconResponse.data?.groupid}`,
+            {
+              headers: {
+                jwt: getCookie("jwt"),
+              },
+            }
+          );
+          setGroupMembers(
+            membersResponse.data.members.filter(
+              (member) => member.userid !== responseUser.data.userid
+            )
+          );
+          console.log(
+            "available members: ",
+            membersResponse.data.members.filter(
+              (member) => member.userid !== responseUser.data.userid
+            )
+          );
+        }
+
         // console.log(payments);
       } catch (e) {
         console.log(e);
@@ -94,7 +147,7 @@ const ReckonDetails = () => {
       <div className="text-center display-2" style={{ paddingBottom: "30px" }}>
         <h1>Szczegóły rachunku</h1>
         <h5>Tytuł: {currentRecon.name || "brak"}</h5>
-        <h5>właściciel: {currentRecon.author || "brak"}</h5>
+        <h5>właściciel: {currentRecon.author_detail?.email || "brak"}</h5>
         <h5>
           termin płatności: {currentRecon.deadline?.split("T", 1) || "brak"}
         </h5>
@@ -127,7 +180,7 @@ const ReckonDetails = () => {
                   required
                 />
               </div>
-              <div className="form-group" style={{ marginRight: "20px" }}>
+              {/* <div className="form-group" style={{ marginRight: "20px" }}>
                 <p>termin płatności</p>
                 <input
                   type="date"
@@ -139,9 +192,28 @@ const ReckonDetails = () => {
                   max="2022-12-31"
                   required
                 ></input>
+              </div> */}
+              <div className="form-group">
+                <label htmlFor="debtor">Kogo obciążyć</label>
+                <select
+                  className="form-control"
+                  id="debtor"
+                  onChange={(e) => setDebtor(e.target.value)}
+                  required
+                >
+                  <option value="" disabled selected>
+                    Wybierz dłużnika
+                  </option>
+                  {groupMembers.length &&
+                    groupMembers.map((member) => (
+                      <option key={member.userid} value={member.userid}>
+                        {member.email}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
-            <button type="submit" className="btn btn-success">
+            <button type="submit" className="btn btn-primary">
               Dodaj płatność do rachunku
             </button>
           </form>
@@ -151,7 +223,7 @@ const ReckonDetails = () => {
             <thead>
               <tr>
                 <th scope="col">Nazwa</th>
-                <th scope="col">Wpłacający</th>
+                <th scope="col">Dłużnik</th>
                 <th scope="col">Kwota</th>
                 <th scope="col">Data zapłaty</th>
               </tr>

@@ -12,9 +12,10 @@ const ClusterDetails = () => {
   const { groupid } = useParams();
   const [details, setDetails] = useState("");
   const [loggedUser, setLoggedUser] = useState("");
-  const [members, setMembers] = useState("");
-  const [recons, setRecons] = useState("");
-  const { foundUsers, setSelectedRecon } = useContext(ReconsContext);
+  const [members, setMembers] = useState("Ładowanie...");
+  const [recons, setRecons] = useState("Ładowanie...");
+  const { foundUsers, setSelectedRecon, setGroupMembers } =
+    useContext(ReconsContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,47 +40,67 @@ const ClusterDetails = () => {
         );
         setLoggedUser(userResponse.data);
         console.log("recons: ", reconsResponse.data);
-        reconsResponse.data.length &&
-          setRecons(
-            reconsResponse.data.map((recon) => {
-              return (
-                <tr key={recon.reckoningid} onClick={(e) => {
-                  history.push(`/ReckonDetails/${recon.reckoningid}`);
-                  setSelectedRecon(recon);
-                  }}>
-                  <td>{recon.name}</td>
-                  <td>{recon.author}</td>
-                  <td>{recon.deadline.split("T", 1)}</td>
-                  <td>{recon.payment_status}</td>
-                </tr>
-              );
-            }) || (
-              <tr>
-                <td>Brak rachunków</td>
-              </tr>
-            )
+
+        const recons = reconsResponse.data.map((recon) => {
+          return (
+            <tr
+              key={recon.reckoningid}
+              onClick={(e) => {
+                history.push(`/ReckonDetails/${recon.reckoningid}`);
+                setSelectedRecon(recon);
+              }}
+            >
+              <td>{recon.name}</td>
+              <td>{recon.author_detail.email}</td>
+              <td>{recon.deadline.split("T", 1)}</td>
+              <td>{recon.payment_status}</td>
+            </tr>
           );
+        });
+        setRecons(
+          recons.length ? (
+            recons
+          ) : (
+            <tr>
+              <td>Brak rachunków</td>
+            </tr>
+          )
+        );
 
         setDetails(response.data);
         console.log(response.data);
-        if (response.data.members) {
-          console.log("członkowie: ", response.data.members);
-          setMembers(
-            response.data.members.map((member) => {
-              return (
-                <tr key={member.userid} >
-                  <td>{member.firstname}</td>
-                  <td>{member.lastname}</td>
-                  <td>{member.email}</td>
-                </tr>
-              );
-            }) || (
-              <tr>
-                <td>Brak członków</td>
-              </tr>
-            )
+        setGroupMembers(
+          response.data.members.filter(
+            (member) => member.userid !== userResponse.data.userid
+          )
+        );
+        console.log(
+          "mapped members: ",
+          response.data.members.map((member) => {
+            if (member.userid !== userResponse.data.userid) {
+              return member;
+            }
+          })
+        );
+        console.log("członkowie: ", response.data.members);
+        const members = response.data.members.map((member) => {
+          return (
+            <tr key={member.userid}>
+              <td>{member.firstname}</td>
+              <td>{member.lastname}</td>
+              <td>{member.email}</td>
+            </tr>
           );
-        }
+        });
+        setMembers(
+          members.length ? (
+            members
+          ) : (
+            <tr>
+              <td>Brak członków</td>
+            </tr>
+          )
+        );
       } catch (e) {
         console.log(e);
         printAlert(e);
@@ -115,7 +136,9 @@ const ClusterDetails = () => {
               paddingTop: "30px",
             }}
           >
-            <table className="table table-info">
+            <h4>Bieżące rachunki</h4>
+            <p>(kliknij na rachunek abyz zobaczyć jego szczegóły)</p>
+            <table className="table table-info table-hover">
               <thead>
                 <tr>
                   <th scope="col">tytuł</th>
@@ -127,6 +150,7 @@ const ClusterDetails = () => {
               <tbody>{recons}</tbody>
             </table>
             <br />
+            <h4>Członkowie</h4>
             <table className="table table-info">
               <thead>
                 <tr>
@@ -139,7 +163,9 @@ const ClusterDetails = () => {
             </table>
           </div>
         </div>
-        <div className="row row-cols-3 mb-2" style={{ padding: "20px" }}>{foundUsers}</div>
+        <div className="row row-cols-3 mb-2" style={{ padding: "20px" }}>
+          {foundUsers}
+        </div>
       </div>
     </div>
   );

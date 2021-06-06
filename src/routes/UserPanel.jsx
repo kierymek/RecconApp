@@ -7,17 +7,13 @@ import Cluster from "../components/Cluster";
 import FindUser from "../components/FindUser";
 import Navbar from "../components/Navbar";
 
-const UserPanel = (props) => {
+const UserPanel = () => {
   const history = useHistory();
   const location = useLocation();
   const [loggedUser, setLoggedUser] = useState("");
-  const [reckonings, setReckonings] = useState("");
+  const [reckoningsOwner, setReckoningsOwner] = useState("");
+  const [reckoningsDebtor, setReckoningsDebtor] = useState("");
   const [groups, setGroups] = useState("");
-  //   const { idClient } = useParams();
-  //   const { selectedClient, setSelectedClient } = useContext(ReconsContext);
-  //   const { selectedReservations, setSelectedReservations } = useContext(
-  //     ReconsContext
-  //   );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,18 +24,31 @@ const UserPanel = (props) => {
           },
         });
         console.log("jwt: ", getCookie("jwt"));
-        const reckoningsResponse = await ReconsFinder.get(
-          "reckonings/reckoningPositionsByUser/2",
+        const reckoningsResponseOwner = await ReconsFinder.get(
+          `reckonings/reckoningPositionsByUser/${response.data.userid}`,
           {
             headers: {
               jwt: getCookie("jwt"),
             },
           }
         );
-        console.log(response.data);
-        console.log(reckoningsResponse.data);
+        const reckoningsResponseDebtor = await ReconsFinder.get(
+          `reckonings/reckoningPositionsForUser/${response.data.userid}`,
+          {
+            headers: {
+              jwt: getCookie("jwt"),
+            },
+          }
+        );
+        console.log("users data", response.data);
+        console.log(
+          "Rachunki użytkownika: ",
+          reckoningsResponseOwner.data,
+          reckoningsResponseDebtor.data
+        );
         setLoggedUser(response.data);
-        setReckonings(reckoningsResponse.data);
+        setReckoningsOwner(reckoningsResponseOwner.data);
+        setReckoningsDebtor(reckoningsResponseDebtor.data);
 
         const groupsResponse = await ReconsFinder.get(
           `/groups/groupinfo/${response.data.userid}`,
@@ -57,18 +66,6 @@ const UserPanel = (props) => {
     };
     fetchData();
   }, []);
-  //   const handleDelete = async (e, id) => {
-  //     try {
-  //       const response = await ReconsFinder.delete(`/reservations/${id}`);
-  //       setSelectedReservations(
-  //         selectedReservations.filter((reservation) => {
-  //           return reservation.id_rezerwacja !== id;
-  //         })
-  //       );
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
 
   const handleEdit = async (e) => {
     try {
@@ -80,34 +77,34 @@ const UserPanel = (props) => {
 
   let income = 0;
   let outcome = 0;
-  const reconingIncome = (reckonings.length &&
-    reckonings.map((recon) => {
+  const reconingIncome = (reckoningsOwner.length &&
+    reckoningsOwner.map((recon) => {
       income += recon.amount;
       return (
         <tr key={recon.reckoningpositionid}>
           <td>{recon.name}</td>
           <td>{recon.amount}</td>
-          <td>{recon.paymentdate}</td>
+          <td>{recon.paymentdate?.split("T", 1) || "nie opłacono"}</td>
         </tr>
       );
     })) || (
     <tr>
-      <td>Brak rachunków</td>
+      <td>Brak pozycji</td>
     </tr>
   );
-  const reconingsOutcome = (reckonings.length &&
-    reckonings.map((recon) => {
+  const reconingsOutcome = (reckoningsDebtor.length &&
+    reckoningsDebtor.map((recon) => {
       outcome += recon.amount;
       return (
         <tr key={recon.reckoningpositionid}>
           <td>{recon.name}</td>
           <td>{recon.amount}</td>
-          <td>{recon.paymentdate}</td>
+          <td>{recon.paymentdate?.split("T", 1)  || "nie opłacono"}</td>
         </tr>
       );
     })) || (
     <tr>
-      <td>Brak rachunków</td>
+      <td>Brak pozycji</td>
     </tr>
   );
   return (
@@ -157,7 +154,7 @@ const UserPanel = (props) => {
               </table>
             </div>
             <div className="col-4">
-              <h3>Rachunki gdzie jesteśmy dłużnikiem</h3>
+              <h3>Pozycje w rachunkach, gdzie jesteśmy dłużnikiem</h3>
               <table className="table table-primary table-hover">
                 <thead>
                   <tr>
@@ -177,7 +174,7 @@ const UserPanel = (props) => {
               </table>
             </div>
             <div className="col-4">
-              <h3>Rachunki których jesteśmy właścicielem</h3>
+              <h3>Pozycje w rachunkach, gdzie jesteśmy właścicielem</h3>
               <table className="table table-primary table-hover">
                 <thead>
                   <tr>

@@ -10,7 +10,8 @@ const Cluster = ({ clusters }) => {
   return (
     <div>
       <br />
-      <h1>Moje grupy</h1>
+      <h1>Moje grupy:</h1>
+      <p>(kliknij na grupę aby zobaczyć jej szczegóły)</p>
       <br />
       <div className="row row-cols-3 mb-2">
         {(clusters.length &&
@@ -27,7 +28,7 @@ const Cluster = ({ clusters }) => {
                   <span>{cluster.name}</span>
                 </div>
                 <div className="card-body d-flex justify-content-between">
-                  <span>Data: </span>
+                  <span>Utworzono: </span>
                   <span className="card-text ">
                     {cluster.startdate.split("T", 1) +
                       " " +
