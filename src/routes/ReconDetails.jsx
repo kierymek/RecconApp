@@ -21,6 +21,27 @@ const ReckonDetails = () => {
   const { reckonId } = useParams();
   //   const [loggedUser, setLoggedUser] = useState("");
 
+  const changeToPaid = async (e, reckoningpositionid) => {
+    try {
+      const response = await ReconsFinder.put(
+        "/reckonings/UpdateReckoningStatusView",
+        {
+          reckoningpositionid,
+        },
+        {
+          headers: {
+            jwt: getCookie("jwt"),
+          },
+        }
+      );
+
+      // console.log(response);
+      history.push("/");
+      history.push(location);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const handleOnAddReckon = async (e) => {
     e.preventDefault();
     try {
@@ -104,6 +125,23 @@ const ReckonDetails = () => {
                   {payment.paymentdate
                     ? payment.paymentdate.split("T", 1)
                     : "Nie opłacono"}
+                </td>
+                <td>
+                  {payment.paymentdate ? (
+                    <span className="h5" style={{ color: "green" }}>
+                      Zapłacono
+                    </span>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="btn btn-dark  btn-large btn-block"
+                      onClick={(e) =>
+                        changeToPaid(e, payment.reckoningpositionid)
+                      }
+                    >
+                      Opłać
+                    </button>
+                  )}
                 </td>
               </tr>
             );

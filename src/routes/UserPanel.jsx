@@ -99,7 +99,7 @@ const UserPanel = () => {
         <tr key={recon.reckoningpositionid}>
           <td>{recon.name}</td>
           <td>{recon.amount}</td>
-          <td>{recon.paymentdate?.split("T", 1)  || "nie opłacono"}</td>
+          <td>{recon.paymentdate?.split("T", 1) || "nie opłacono"}</td>
         </tr>
       );
     })) || (
@@ -154,7 +154,7 @@ const UserPanel = () => {
               </table>
             </div>
             <div className="col-4">
-              <h3>Pozycje w rachunkach, gdzie jesteśmy dłużnikiem</h3>
+              <h3>Grupy gdzie jesteśmy dłużnikiem</h3>
               <table className="table table-primary table-hover">
                 <thead>
                   <tr>
@@ -174,7 +174,7 @@ const UserPanel = () => {
               </table>
             </div>
             <div className="col-4">
-              <h3>Pozycje w rachunkach, gdzie jesteśmy właścicielem</h3>
+              <h3>Grupy gdzie jesteśmy właścicielem</h3>
               <table className="table table-primary table-hover">
                 <thead>
                   <tr>
