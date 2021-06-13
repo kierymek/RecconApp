@@ -52,7 +52,15 @@ const ClusterDetails = () => {
               <td>{recon.name}</td>
               <td>{recon.author_detail.email}</td>
               <td>{recon.deadline.split("T", 1)}</td>
-              <td>{recon.payment_status}</td>
+              <td>
+                {recon.payment_status == "PARTIAL" ? (
+                  <h6 style={{ color: "blue" }}>Częściowo</h6>
+                ) : recon.payment_status == "True" ? (
+                  <h6 style={{ color: "green" }}>Zapłacone</h6>
+                ) : (
+                  <h6 style={{ color: "red" }}>Niezapłacone</h6>
+                )}
+              </td>
             </tr>
           );
         });
