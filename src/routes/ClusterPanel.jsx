@@ -17,9 +17,7 @@ const ClusterPanel = () => {
             jwt: getCookie("jwt"),
           },
         });
-        console.log(response);
         setLoggedUser(response.data);
-        console.log("logged user: ", response.data);
         const groupsResponse = await ReconsFinder.get(
           `/groups/groupinfo/${response.data.userid}`,
           {
@@ -28,10 +26,8 @@ const ClusterPanel = () => {
             },
           }
         );
-        console.log(groupsResponse);
         setGroups(groupsResponse.data);
       } catch (e) {
-        console.log(e);
         printAlert(e);
       }
     };

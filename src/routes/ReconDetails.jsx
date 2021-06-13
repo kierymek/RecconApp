@@ -35,11 +35,10 @@ const ReckonDetails = () => {
         }
       );
 
-      // console.log(response);
       history.push("/");
       history.push(location);
     } catch (e) {
-      console.log(e);
+      printAlert(e);
     }
   };
   const handleOnAddReckon = async (e) => {
@@ -50,19 +49,12 @@ const ReckonDetails = () => {
           jwt: getCookie("jwt"),
         },
       });
-      console.log(
-        "userResponse: ",
-        userResponse,
-        "currentRecon: ",
-        currentRecon,
-        currentRecon.userid
-      );
-      // if (userResponse.data.userid !== currentRecon.author_detail.userid) {
-      //   alert(
-      //     "Nie możesz dodawać pozycji do rachunku nie będąc jego właścicielem!"
-      //   );
-      //   return;
-      // }
+      if (userResponse.data.userid !== currentRecon.author_detail.userid) {
+        alert(
+          "Nie możesz dodawać pozycji do rachunku nie będąc jego właścicielem!"
+        );
+        return;
+      }
       const response = await ReconsFinder.post(
         "reckonings/reckoningPosition",
         {
@@ -81,7 +73,6 @@ const ReckonDetails = () => {
 
       history.push("/");
       history.push(location);
-      console.log(response);
     } catch (e) {
       printAlert(e);
     }
@@ -112,8 +103,7 @@ const ReckonDetails = () => {
           }
         );
         !currentRecon && setCurrentRecon(reconResponse.data);
-        console.log("payments: ", response.data);
-        console.log("current recon: ", reconResponse.data);
+
         setPayments(
           response.data.map((payment) => {
             return (
@@ -162,17 +152,8 @@ const ReckonDetails = () => {
               (member) => member.userid !== responseUser.data.userid
             )
           );
-          console.log(
-            "available members: ",
-            membersResponse.data.members.filter(
-              (member) => member.userid !== responseUser.data.userid
-            )
-          );
         }
-
-        // console.log(payments);
       } catch (e) {
-        console.log(e);
         printAlert(e);
       }
     };

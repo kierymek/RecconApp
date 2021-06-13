@@ -6,7 +6,7 @@ import {
   useParams,
 } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
-import { getCookie } from "../context/Functions";
+import { getCookie, printAlert } from "../context/Functions";
 import { ReconsContext } from "../context/ReconsContext";
 //const history = useHistory();
 
@@ -19,7 +19,6 @@ const FindUser = ({ groupid }) => {
   const { setFoundUsers } = useContext(ReconsContext);
 
   async function addUserToCluster(user) {
-    console.log(user);
     const addUserResponse = await ReconsFinder.post(
       "groups/groupmembers",
       {
@@ -32,14 +31,11 @@ const FindUser = ({ groupid }) => {
         },
       }
     );
-    console.log("added user: ", addUserResponse);
     history.push("/");
     history.push(location);
-    //groupId
     try {
     } catch (e) {
-      console.log(e);
-      alert("Bład");
+      printAlert(e);
     }
   }
 
@@ -55,7 +51,6 @@ const FindUser = ({ groupid }) => {
           },
         }
       );
-      console.log(response.data);
       if (response.data.length == 0) alert("Brak użytkownika");
       setFoundUsers(
         response.data.map((user) => {
@@ -97,8 +92,7 @@ const FindUser = ({ groupid }) => {
         })
       );
     } catch (e) {
-      console.log(e);
-      alert("Nie znaleziono użytkownika");
+      printAlert(e);
     }
   };
   return (

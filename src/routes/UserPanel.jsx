@@ -23,7 +23,6 @@ const UserPanel = () => {
             jwt: getCookie("jwt"),
           },
         });
-        console.log("jwt: ", getCookie("jwt"));
         const reckoningsResponseOwner = await ReconsFinder.get(
           `reckonings/reckoningPositionsByUser/${response.data.userid}`,
           {
@@ -40,12 +39,7 @@ const UserPanel = () => {
             },
           }
         );
-        console.log("users data", response.data);
-        console.log(
-          "Rachunki użytkownika: ",
-          reckoningsResponseOwner.data,
-          reckoningsResponseDebtor.data
-        );
+
         setLoggedUser(response.data);
         setReckoningsOwner(reckoningsResponseOwner.data);
         setReckoningsDebtor(reckoningsResponseDebtor.data);
@@ -58,7 +52,6 @@ const UserPanel = () => {
             },
           }
         );
-        console.log(groupsResponse);
         setGroups(groupsResponse.data);
       } catch (e) {
         printAlert(e);

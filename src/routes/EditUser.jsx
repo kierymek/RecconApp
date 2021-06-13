@@ -26,12 +26,10 @@ const EditUser = () => {
             jwt: getCookie("jwt"),
           },
         });
-        console.log(response.data);
         setName(response.data.firstname);
         setSurname(response.data.lastname);
         setEmail(response.data.email);
       } catch (e) {
-        console.log(e);
         printAlert(e);
       }
     };
@@ -55,7 +53,6 @@ const EditUser = () => {
           },
         }
       );
-      console.log(response.data);
       document.cookie = `jwt=${response.data.jwt}`;
       history.push("/userPanel");
     } catch (e) {

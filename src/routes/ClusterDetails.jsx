@@ -39,7 +39,6 @@ const ClusterDetails = () => {
           }
         );
         setLoggedUser(userResponse.data);
-        console.log("recons: ", reconsResponse.data);
 
         const recons = reconsResponse.data.map((recon) => {
           return (
@@ -68,21 +67,11 @@ const ClusterDetails = () => {
         );
 
         setDetails(response.data);
-        console.log(response.data);
         setGroupMembers(
           response.data.members.filter(
             (member) => member.userid !== userResponse.data.userid
           )
         );
-        console.log(
-          "mapped members: ",
-          response.data.members.map((member) => {
-            if (member.userid !== userResponse.data.userid) {
-              return member;
-            }
-          })
-        );
-        console.log("członkowie: ", response.data.members);
         const members = response.data.members.map((member) => {
           return (
             <tr key={member.userid}>
@@ -102,13 +91,11 @@ const ClusterDetails = () => {
           )
         );
       } catch (e) {
-        console.log(e);
         printAlert(e);
       }
     };
     fetchData();
   }, []);
-  console.log(getCookie("jwt"));
 
   return (
     <div>

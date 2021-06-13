@@ -22,7 +22,6 @@ const AddCluster = ({ loggedUser }) => {
           },
         }
       );
-      console.log(createClusterResponse.data);
       const addUserResponse = await ReconsFinder.post(
         "groups/groupmembers",
         {
@@ -35,7 +34,6 @@ const AddCluster = ({ loggedUser }) => {
           },
         }
       );
-      console.log(addUserResponse.data);
       history.push("/");
       history.push("/ClusterPanel");
     } catch (e) {

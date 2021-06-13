@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
-import {printAlert} from "../context/Functions"; 
+import { printAlert } from "../context/Functions";
 
 const LogUser = () => {
   const history = useHistory();
@@ -16,28 +16,11 @@ const LogUser = () => {
         password,
         email,
       });
-      console.log(response);
       document.cookie = `jwt=${response.data.jwt}`;
-      // setSelectedClient(response.data.data);
-      console.log(document.cookie);
       history.push("/userPanel");
     } catch (e) {
-        printAlert(e);
+      printAlert(e);
     }
-    // try {
-    //     const response = await ReconsFinder.get(`/clients/login/${nickname}/${password}`);
-    //     if (response.data.status === "success") {
-    //         history.push(`/clients/${response.data.data.client.id_klient}/reservations`);
-    //     } else {
-    //         alert("No such a user! Wrong login or password!")
-    //     }
-    // } catch (e) {
-    //     console.log(e);
-    //     // alert("No such a user! Wrong login or password!")
-    // }
-
-    // const response = await ReconsFinder.get("logged");
-    // console.log("Loguser response: ", response);
   };
 
   return (

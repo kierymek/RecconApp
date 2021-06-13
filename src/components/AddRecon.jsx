@@ -28,7 +28,6 @@ const AddRecon = ({ groupid, loggedUser }) => {
           },
         }
       );
-      console.log(response.data);
       history.push(`/ClusterDetails/${groupid}`);
       alert("Dodano rachunek");
       history.push("/");

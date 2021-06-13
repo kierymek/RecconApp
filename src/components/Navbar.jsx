@@ -1,6 +1,7 @@
 import React from "react";
 import ReconsFinder from "../apis/ReconsFinder";
 import { useHistory } from "react-router-dom";
+import { printAlert } from "../context/Functions";
 const Navbar = () => {
   const history = useHistory();
   function getCookie(cname) {
@@ -26,12 +27,10 @@ const Navbar = () => {
           jwt: getCookie("jwt"),
         },
       });
-      console.log(response.data);
       document.cookie = "jwt=;";
-      console.log(document.cookie);
       history.push("/");
     } catch (e) {
-      console.log(e);
+      printAlert(e);
     }
   };
   return (

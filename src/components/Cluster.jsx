@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 const Cluster = ({ clusters }) => {
   const history = useHistory();
   function moveToDetails(groupid) {
-    console.log(groupid);
     history.push(`/clusterDetails/${groupid}`);
   }
   return (

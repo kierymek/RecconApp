@@ -22,7 +22,6 @@ const Register = () => {
         password,
         email,
       });
-      console.log(response.data);
       setSelectedClient(response.data.data);
       history.push("/");
     } catch (e) {
