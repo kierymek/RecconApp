@@ -153,45 +153,60 @@ const UserPanel = () => {
                 </thead>
               </table>
             </div>
-            <div className="col-4">
-              <h3>Grupy gdzie jesteśmy dłużnikiem</h3>
-              <table className="table table-primary table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">tytuł</th>
-                    <th scope="col">kwota</th>
-                    <th scope="col">data</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reconingsOutcome}
-                  <tr>
-                    <td>{"bilans"}</td>
-                    <td>{outcome}</td>
-                    <td></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="col-4">
-              <h3>Grupy gdzie jesteśmy właścicielem</h3>
-              <table className="table table-primary table-hover">
-                <thead>
-                  <tr>
-                    <th scope="col">tytuł</th>
-                    <th scope="col">kwota</th>
-                    <th scope="col">data</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reconingIncome}
-                  <tr>
-                    <td>{"bilans"}</td>
-                    <td>{income}</td>
-                    <td></td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="col-8">
+              <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
+                Bilans rachunków
+              </h1>
+              <div className="row">
+                <div className="col-6">
+                  <h3>Tu jesteśmy dłużnikiem</h3>
+                  <table className="table table-primary table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">tytuł</th>
+                        <th scope="col">kwota</th>
+                        <th scope="col">data</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reconingsOutcome}
+                      <tr>
+                        <td>
+                          <span style={{ fontWeight: "bold" }}>{"suma"}</span>
+                        </td>
+                        <td>
+                          <span style={{ fontWeight: "bold" }}>{outcome}</span>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="col-6">
+                  <h3>Tu jesteśmy właścicielem</h3>
+                  <table className="table table-primary table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">tytuł</th>
+                        <th scope="col">kwota</th>
+                        <th scope="col">data</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reconingIncome}
+                      <tr>
+                        <td>
+                          <span style={{ fontWeight: "bold" }}>{"suma"}</span>
+                        </td>
+                        <td>
+                          <span style={{ fontWeight: "bold" }}>{income}</span>
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </>

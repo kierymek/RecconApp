@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import ReconsFinder from "../apis/ReconsFinder";
 import { getCookie, printAlert } from "../context/Functions";
 
@@ -7,18 +7,14 @@ const AddCluster = ({ loggedUser }) => {
   const history = useHistory();
 
   const [name, setName] = useState("");
-  // const [startDate, setStartDate] = useState("2021-06-05");
 
   const handleAddCluster = async (e) => {
-    console.log("Jebać IOIOIIIOIOIOI");
     e.preventDefault();
     try {
-      // console.log("start date: ", startDate);
       const createClusterResponse = await ReconsFinder.post(
         "groups/group",
         {
           name,
-          // startdate: startDate + "T00:00:00Z",
         },
         {
           headers: {
@@ -65,18 +61,6 @@ const AddCluster = ({ loggedUser }) => {
                 required
               />
             </div>
-            {/* <div className="form-group" style={{ marginRight: "20px" }}>
-              <p>Data utworzenia</p>
-              <input
-                type="date"
-                id="start"
-                name="trip-start"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                min={new Date().toISOString().slice(0, 10)}
-                max="2022-12-31"
-              ></input>
-            </div> */}
           </div>
           <button type="submit" className="btn btn-success">
             Utwórz grupę
